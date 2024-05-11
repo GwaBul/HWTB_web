@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { firebaseConfig, vapidKey } from './config';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
@@ -127,7 +126,7 @@ export const App = () => {
       const newMap = new Tmapv3.Map("map_div", {
         center: center,
         width: "100%",
-        height: "566px",
+        height: "800px",
         zoom: 15,
         pitch: "60",
       });

@@ -1,7 +1,7 @@
 .loc-btn {
     position: fixed;
-    bottom:50px;
-    right:20px;
+    top:88%;
+    right:5%;
     justify-content: center;
     z-index: 999;
   }

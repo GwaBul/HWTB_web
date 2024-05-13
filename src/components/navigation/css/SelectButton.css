@@ -1,0 +1,7 @@
+.select-btn {
+    position: fixed;
+    top: 20%;
+    right: 0;
+    z-index: 999;
+    justify-content: center;
+}

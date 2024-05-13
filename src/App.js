@@ -7,6 +7,8 @@ import axios from "axios"
 import './App.css';
 import Header from './components/HeaderComponent';
 import LocationButton from './components/LocationButtonComponent';
+import WarningComponent from './components/WarningComponent';
+import InfoComponent from './components/InfoComponent';
 
 const { Tmapv3 } = window;
 const app = initializeApp(firebaseConfig);
@@ -157,6 +159,8 @@ const App = () => {
     <>
     <Header/>
     <LocationButton moveToUserLocation={moveToUserLocation}/>
+    <WarningComponent/>
+    <InfoComponent/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

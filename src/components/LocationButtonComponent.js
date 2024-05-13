@@ -17,8 +17,8 @@ const LocationButton = ({ moveToUserLocation }) => {
                 },
                 '&:focus': {
                     backgroundColor: 'white', 
-                }, zIndex: '999',boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', borderRadius:15}} onClick={moveToUserLocation}>
-                <MyLocationIcon color="primary" sx={{width:'24px'}} />
+                }, zIndex: '999',boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', borderRadius:7}} onClick={moveToUserLocation}>
+                <MyLocationIcon color="primary" sx={{fontSize:'30px'}} />
                 </Button>
         </div >
     );

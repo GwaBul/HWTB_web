@@ -10,6 +10,7 @@ import LocationButton from './components/LocationButtonComponent';
 import WarningComponent from './components/WarningComponent';
 import InfoComponent from './components/InfoComponent';
 import StartButton from './components/navigation/StartButton';
+import SelectButton from './components/navigation/SelectButton';
 
 const { Tmapv3 } = window;
 const app = initializeApp(firebaseConfig);
@@ -158,10 +159,11 @@ const App = () => {
 
   return (
     <>
-    <Header/>
-    <LocationButton moveToUserLocation={moveToUserLocation}/>
-    <InfoComponent/>
-    <StartButton/>
+      <Header />
+      <LocationButton moveToUserLocation={moveToUserLocation} />
+      <SelectButton/>
+      <InfoComponent />
+      <StartButton />        
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

@@ -15,7 +15,7 @@ const Header = () => {
         <div className="header">
             <Card className="cardStyle" sx={{ zIndex: '999', maxWidth: 800,borderRadius:5 }}>
                 <div style={{display:'flex'}}>
-                    <Typography variant='h5' sx={{ fontFamily: "NanumBarunGothicBold", display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 4, py: 1.5, pr: 0, width:'100%'}}>
+                    <Typography variant='h5' sx={{ fontFamily: "NanumBarunGothicBold", display: 'flex', alignItems: 'center', justifyContent: 'center', px: 4, py: 1.5, pr: 0, width:'100%'}}>
                         실시간 하천 수위 확인
                     </Typography>
                     <Button onClick={handleExpandClick} sx={{ px: 0 }}>{expanded ? <ArrowDropUpIcon/> : <ArrowDropDownIcon />}</Button>

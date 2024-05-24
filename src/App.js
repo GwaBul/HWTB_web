@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import axios from "axios"
+import './App.css';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig, vapidKey, apikey } from './config';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useGeoLocation } from './hooks/useGeoLocation';
-import axios from "axios"
-import './App.css';
 import Header from './components/HeaderComponent';
 import LocationButton from './components/LocationButtonComponent';
 import WarningComponent from './components/WarningComponent';
@@ -75,7 +75,7 @@ const requestPermission = () => {
   )
 }
 
-// 사용자 디바이스 토큰 서버에 전송하는
+// 사용자 디바이스 토큰 서버에 전송하는 함수
 // const sendToken = (token) => {
 //   axios.post('http://localhost:8080/fcm/devices', {
 //     name: token
@@ -92,30 +92,12 @@ const requestPermission = () => {
 // }
 
 const App = () => {
-  const { location } = useGeoLocation();
+  const { location } = useGeoLocation();          // 사용자 좌표 조회
   const latitude = location ? location.latitude : null;
   const longitude = location ? location.longitude : null;
-  const coordinate = {
-    x: longitude,
-    y: latitude,
-  };
-
-  const requestData = {
-    startX: longitude,
-    startY: latitude,
-    endX: 128.3880806,
-    endY: 36.1450141,
-    reqCoordType: 'WGS84GEO',
-    resCoordType: 'EPSG3857',
-    startName: '출발지',
-    endName: '도착지'
-  };
-
-
-
-  const [map, setMap] = useState(null);
-  const [initMap, setInitMap] = useState(false);
-  const [marker, setMarker] = useState(null);
+  const [map, setMap] = useState(null);           // 지도 객체 
+  const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
+  const [marker, setMarker] = useState(null);     // 지도 마커
 
   useEffect(() => {
     requestPermission();

@@ -4,7 +4,6 @@ import React from 'react';
 import '../components/css/locationButton.css';
 
 const LocationButton = ({ moveToUserLocation }) => {
-
     return (
         <div className="loc-btn">
             <Button variant="primary" sx={{

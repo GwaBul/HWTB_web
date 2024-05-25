@@ -8,7 +8,7 @@ const SelectButton = () => {
     const renderComponent = () => {
         switch(selectedButton) {
             case 'button1':
-                return '경로1';
+                return  '경로1';
             case 'button2':
                 return '경로2';
             case 'button3':
@@ -20,7 +20,7 @@ const SelectButton = () => {
 
     return (
         <div className="select-btn">
-            <Box sx={{display:'flex', flexDirection:'column' ,justifyContent:'center', alignItems:'end', py:1}}>
+            <Box sx={{display:'flex', flexDirection:'column' ,justifyContent:'center', alignItems:'end', py:1, height:'200px'}}>
                 <Button 
                     variant='contained'
                     sx={{
@@ -36,7 +36,7 @@ const SelectButton = () => {
                         '&:hover': {
                             backgroundColor: '#A6A6A6', 
                         }, 
-                        ...(selectedButton === 'button1' && {color:'#007cff', backgroundColor:'#FFFFFF', width:'100px', height:'45px'})
+                        ...(selectedButton === 'button1' && {color:'#007cff', backgroundColor:'#FFFFFF !important', width:'100px', height:'45px'})
                     }} 
                     onClick={() => setSelectedButton('button1')}
                 >
@@ -56,7 +56,7 @@ const SelectButton = () => {
                         '&:hover': {
                             backgroundColor: '#A6A6A6', 
                         }, 
-                        ...(selectedButton === 'button2' && {color:'#007cff', backgroundColor:'#FFFFFF', width:'100px', height:'45px'})
+                        ...(selectedButton === 'button2' && {color:'#007cff', backgroundColor:'#FFFFFF !important', width:'100px', height:'45px'})
                     }} 
                     onClick={() => setSelectedButton('button2')}
                 >
@@ -76,7 +76,7 @@ const SelectButton = () => {
                         '&:hover': {
                             backgroundColor: '#A6A6A6', 
                         }, 
-                        ...(selectedButton === 'button3' && {color:'#007cff', backgroundColor:'#FFFFFF', width:'100px', height:'45px'})
+                        ...(selectedButton === 'button3' && {color:'#007cff', backgroundColor:'#FFFFFF !important', width:'100px', height:'45px'})
                     }} 
                     onClick={() => setSelectedButton('button3')}
                 >

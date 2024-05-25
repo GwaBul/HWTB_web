@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 export const useGeoLocation = (options) => {
   const [location, setLocation] = useState(null);
@@ -6,22 +6,23 @@ export const useGeoLocation = (options) => {
 
   useEffect(() => {
     const { geolocation } = navigator;
-    const geolocationOptions = {
+    if (!geolocation) {
+      setError('사용자 위치 정보를 가져올 수 없습니다.');
+      return;
+    }
+
+    const watcher = geolocation.watchPosition(handleSuccess, handleError, {
       enableHighAccuracy: true,
       timeout: 1000 * 10,
       maximumAge: 1000 * 3600 * 24,
-    };
+      ...options,
+    });
 
-    if (!geolocation) {
-      setError('사용자 위치 정보를 가져올 수 없습니다.');
-      return
-    }
-
-    geolocation.getCurrentPosition(handleSuccess, handleError, geolocationOptions)
-  }, [])
+    return () => geolocation.clearWatch(watcher); // 컴포넌트 언마운트 시 위치 추적 중단
+  }, [options]) 
 
   const handleSuccess = (pos) => {
-    const { latitude, longitude } = pos.coords
+    const { latitude, longitude } = pos.coords;
 
     setLocation({
       latitude,
@@ -30,8 +31,8 @@ export const useGeoLocation = (options) => {
   };
 
   const handleError = (err) => {
-    setError(err.message)
+    setError(err.message);
   };
 
   return { location, error };
-}
+};

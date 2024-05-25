@@ -13,6 +13,7 @@ import StartButton from './components/navigation/StartButton';
 import SelectButton from './components/navigation/SelectButton';
 import user from './assets/user.png'
 import useNavigateToUserLocation from './hooks/useNavigaterToUserLocation';
+import NavigationComponent from './components/navigation/Navigation';
 
 const { Tmapv3 } = window;
 const app = initializeApp(firebaseConfig);
@@ -99,20 +100,9 @@ const App = () => {
   const longitude = location ? location.longitude : null;
   const [map, setMap] = useState(null);           // 지도 객체 
   const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
-  const [marker, setMarker] = useState(null);     // 지도 마커
-
-
-  const requestData = {
-      startX: 36.1277473,   // 출발지 x 좌표
-     startY: 128.3385684,    // 출발지 y 좌표
-      endX: 36.1270121, // 도착지 x 좌표
-      endY: 128.3381372,    // 도착지 y 좌표
-      reqCoordType: 'WGS84GEO',  
-      resCoordType: 'EPSG3857',  
-      startName: '출발지', 
-      endName: '도착지'
-    }; 
-
+  const [userMarker, setuserMarker] = useState(null);     // 지도 마커
+  const [showNavigation, setShowNavigation] = useState(false);
+  
   useEffect(() => {
     requestPermission();
   }, []);
@@ -120,7 +110,7 @@ const App = () => {
   useEffect(() => {
     if (!initMap && location) {
       //const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
-      const center = new Tmapv3.LatLng(36.1277473, 128.3385684);
+      const center = new Tmapv3.LatLng(36.1245864, 128.3329175);
       const newMap = new Tmapv3.Map("map", {
         center: center,
         width: "100%",
@@ -131,25 +121,25 @@ const App = () => {
         pitch: "60",
       });
 
-      var tmapSize = new Tmapv3.Size(50, 50);
+      var tmapSize = new Tmapv3.Size(40, 40);
 
-      const newMarker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(36.1277473, 128.3385684),
+      const userMarker = new Tmapv3.Marker({
+        position: new Tmapv3.LatLng(36.1245864, 128.3329175),
         icon: `${user}`,
         iconSize: tmapSize,
         map: newMap
       });
 
       var exitMarker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(36.1270121,128.3381372),
+        position: new Tmapv3.LatLng(36.124957, 128.334231),
         map: newMap
       });
 
       setMap(newMap);
       setInitMap(true);
-      setMarker(exitMarker);
+      setuserMarker(userMarker);
     }
-  }, [location, initMap, marker, latitude, longitude]);
+  }, [location, initMap, userMarker, latitude, longitude]);
 
   const moveToUserLocation = (e) => {
     if (map && location) {
@@ -158,15 +148,11 @@ const App = () => {
     }
   };
 
-  //useNavigateToUserLocation(map, requestData);
-
   return (
     <>
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
-      {/* <SelectButton/> */}
-      {/* <InfoComponent /> */}
-      {/* <StartButton />         */}
+      {showNavigation && <NavigationComponent map={map} user={userMarker}/>}
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

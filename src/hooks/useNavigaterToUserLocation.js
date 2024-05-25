@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-import apikey from '../config.js';
+import { apikey } from '../config.js';
 
 const { Tmapv3 } = window;
 
@@ -13,14 +13,14 @@ const { Tmapv3 } = window;
 // API 요청 데이터 형식
 // const requestData = {
 //   startX: longitude,   // 출발지 x 좌표
-//   startY: latitude,    // 출발지 y 좌표
+//  startY: latitude,    // 출발지 y 좌표
 //   endX: 128.3880806,   // 도착지 x 좌표
 //   endY: 36.1450141,    // 도착지 y 좌표
 //   reqCoordType: 'WGS84GEO',  // 요청 좌표 타입
 //   resCoordType: 'EPSG3857',  // 응답 좌표 타입
 //   startName: '출발지', 
 //   endName: '도착지'
-// };
+// }; 
 
 
 // TODO: 경로1, 경로2, 경로3 컴포넌트에서 경로찾기 hook 연결

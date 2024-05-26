@@ -26,6 +26,7 @@
     "workbox-strategies": "^6.6.0",
     "workbox-streams": "^6.6.0"
   },
+  "proxy":"https://geolocation.apigw.ntruss.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

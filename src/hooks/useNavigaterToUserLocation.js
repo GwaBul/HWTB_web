@@ -1,14 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import { apikey } from '../config.js';
+
 const { Tmapv3 } = window;
 
-const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
-  const [polyline, setPolyline] = useState(null);
+// 좌표 객체(TMap 네비게이션 함수에 넣기 위한 객체)
+// const coordinate = {
+//   x: longitude,
+//   y: latitude,
+// };
 
+// API 요청 데이터 형식
+// const requestData = {
+//   startX: longitude,   // 출발지 x 좌표
+//  startY: latitude,    // 출발지 y 좌표
+//   endX: 128.3880806,   // 도착지 x 좌표
+//   endY: 36.1450141,    // 도착지 y 좌표
+//   reqCoordType: 'WGS84GEO',  // 요청 좌표 타입
+//   resCoordType: 'EPSG3857',  // 응답 좌표 타입
+//   startName: '출발지', 
+//   endName: '도착지'
+// }; 
+
+// TODO: 경로1, 경로2, 경로3 컴포넌트에서 경로찾기 hook 연결
+// TODO: 길찾기 시작 후 반응형 네비게이션 컴포넌트에서 hook 연결
+const useNavigateToUserLocation = (map, requestData) => {
   useEffect(() => {
-    if (!shouldNavigate) return; // shouldNavigate 상태에 따라 네비게이션 실행 여부 결정
-
+    if(!map) return;
     const navigateToUserLocation = async () => {
       try {
         const response = await axios.post(
@@ -32,15 +50,11 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
                 geometry.coordinates[j][0],
                 geometry.coordinates[j][1]
               );
-              const convertPoint = Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
+              const convertPoint = new Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
               const convertChange = new Tmapv3.LatLng(convertPoint._lat, convertPoint._lng);
               drawInfoArr.push(convertChange);
             }
           }
-        }
-
-        if (polyline) {
-          polyline.setMap(null);
         }
         drawLine(drawInfoArr);
 
@@ -50,25 +64,16 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
     };
 
     const drawLine = (arrPoint) => {
-      const newPolyline = new Tmapv3.Polyline({
+      new Tmapv3.Polyline({
         path: arrPoint,
         strokeColor: "#34ff8b",
         strokeWeight: 6,
         map: map
       });
-      setPolyline(newPolyline);
     };
 
     navigateToUserLocation();
-
-    return () => {
-      if (polyline) {
-        polyline.setMap(null);
-      }
-    };
-  }, [map, requestData, shouldNavigate, polyline]);
-
-  return null;
+  }, [requestData]); 
 };
 
 export default useNavigateToUserLocation;

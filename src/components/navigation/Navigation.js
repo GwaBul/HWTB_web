@@ -78,10 +78,10 @@ const dummyUserMovement = [
 const NavigationComponent = ({ map, user }) => {
     const [requestData, setRequestData] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [shouldNavigate, setShouldNavigate] = useState(false); 
+    const [shouldNavigate, setShouldNavigate] = useState(false);
 
     useEffect(() => {
-        if (!shouldNavigate) return; 
+        if (!shouldNavigate) return;
 
         const interval = setInterval(() => {
             if (currentIndex < dummyUserMovement.length) {
@@ -111,28 +111,33 @@ const NavigationComponent = ({ map, user }) => {
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [currentIndex, shouldNavigate]);
+    }, [currentIndex, shouldNavigate, user]);
 
     // 경로 그리기 시작
     const startNavigation = () => {
-        setShouldNavigate(true);
-        setCurrentIndex(0); // 인덱스 초기화
+        setTimeout(() => {
+            setShouldNavigate(true);
+            setCurrentIndex(0); // 인덱스 초기화
+        }, 0);
     };
 
     // 경로 중지 및 지우기
     const stopAndClearNavigation = () => {
-        setShouldNavigate(false);
-        setCurrentIndex(0);
-        setRequestData(null); // 요청 데이터 초기화
+        setTimeout(() => {
+            setShouldNavigate(false);
+            setCurrentIndex(0);
+            setRequestData(null); // 요청 데이터 초기화
+        }, 0);
     };
 
+    // requestData가 바뀔떄마다 useEffect실행되게 해야되는데 상위컴포넌트인 여기는 안걸려있음 그게 문젠가?
     useNavigateToUserLocation(map, requestData, shouldNavigate);
 
     return (
         <>
             <SelectButton onClick={stopAndClearNavigation} />
             <InfoComponent />
-            <StartButton onClick={startNavigation} /> 
+            <StartButton onClick={startNavigation} />
         </>
     );
 };

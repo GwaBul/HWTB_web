@@ -9,6 +9,4 @@ export const firebaseConfig = {
   };
   
   export const vapidKey = 'BKsI9LD7YsUgrTAB7IEP884AkwFJgkXDDDXRnMHQ7VvCfc3VBrvAZd8zIUgH4g-n-_fUGtdk3JaFp-dnZ3MUpeg';
-  export const apikey = {
-    appKey: "8qPFI6jVze3TWpBdBFo6daXPRKMeDiHa7YPMkyYK"
-  };
+  export const apikey = "8R8fJZobdS9TSdUVfPrN3VhAa2sPurw9booOHdh6";

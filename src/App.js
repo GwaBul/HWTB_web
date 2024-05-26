@@ -86,7 +86,7 @@ const App = () => {
   const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
   const [userMarker, setuserMarker] = useState(null);     // 지도 마커
   const [showNavigation, setShowNavigation] = useState(false);
-  
+
   useEffect(() => {
     requestPermission();
   }, []);
@@ -122,6 +122,7 @@ const App = () => {
       setMap(newMap);
       setInitMap(true);
       setuserMarker(userMarker);
+      setShowNavigation(true);
     }
   }, [location, initMap, userMarker, latitude, longitude]);
 
@@ -136,8 +137,8 @@ const App = () => {
     <>
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
+      {showNavigation && <NavigationComponent map={map} user={userMarker}/>}
       <CitiesService/>
-      <TestButton map={map} user={user}/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

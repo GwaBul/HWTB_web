@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apikey } from '../config.js';
 
@@ -24,11 +24,15 @@ const { Tmapv3 } = window;
 
 // TODO: 경로1, 경로2, 경로3 컴포넌트에서 경로찾기 hook 연결
 // TODO: 길찾기 시작 후 반응형 네비게이션 컴포넌트에서 hook 연결
-const useNavigateToUserLocation = (map, requestData) => {
+const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
+  const [polyline, setPolyline] = useState(null);
+
   useEffect(() => {
-    if(!map) return;
+    if (!map || !requestData || !shouldNavigate) return;
     const navigateToUserLocation = async () => {
       try {
+        if(requestData === null) return;
+        console.log(requestData);
         const response = await axios.post(
           'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&callback=function',
           requestData,
@@ -38,7 +42,7 @@ const useNavigateToUserLocation = (map, requestData) => {
             }
           }
         );
-
+        console.log(response.data)
         const resultData = response.data.features;
         const drawInfoArr = [];
 
@@ -56,24 +60,26 @@ const useNavigateToUserLocation = (map, requestData) => {
             }
           }
         }
-        drawLine(drawInfoArr);
-
+        if (polyline) {
+          polyline.setMap(null);
+        }
+        const NewPolyLine = new Tmapv3.Polyline({
+          path: drawInfoArr,
+          strokeColor: "#4B87FF",
+          strokeWeight: 6,
+          // direction : true, //방향선 표시여부
+          map: map
+        });
+        setPolyline(NewPolyLine);
+        
       } catch (error) {
         console.error('Error navigating to user location:', error);
       }
     };
 
-    const drawLine = (arrPoint) => {
-      new Tmapv3.Polyline({
-        path: arrPoint,
-        strokeColor: "#34ff8b",
-        strokeWeight: 6,
-        map: map
-      });
-    };
-
     navigateToUserLocation();
-  }, [requestData]); 
+
+  }, [map, requestData, shouldNavigate]); 
 };
 
 export default useNavigateToUserLocation;

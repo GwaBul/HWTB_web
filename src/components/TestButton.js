@@ -12,7 +12,7 @@ const TestButton = (map, user) => {
     return (
         <>
         <Button onClick={handleClick}>
-            {show && <NavigationComponent map={map} user={user}/>}
+            
         </Button>
         </>
     );

@@ -39,7 +39,7 @@ const dummyUserMovement = [
 ]
 
 // GPS 이용 코드
-// const NavigationComponent = ({ map }) => {
+// const ResponsiveNavigation = ({ map }) => {
 //     const { location, error } = useGeoLocation();
 //     const [requestData, setRequestData] = useState(null);
 //     const [currentIndex, setCurrentIndex] = useState(0);
@@ -75,7 +75,7 @@ const dummyUserMovement = [
 //     );
 //   };
 
-const NavigationComponent = ({ map, user }) => {
+const ResponsiveNavigation = ({ map, user }) => {
     const [requestData, setRequestData] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [shouldNavigate, setShouldNavigate] = useState(false);
@@ -119,4 +119,4 @@ const NavigationComponent = ({ map, user }) => {
 };
 
 
-export default NavigationComponent;
+export default ResponsiveNavigation;

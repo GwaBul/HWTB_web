@@ -6,7 +6,7 @@ import { apikey } from '../../config.js';
 import SelectButton from '../navigation/SelectButton.js';
 import InfoComponent from '../InfoComponent.js';
 import StartButton from '../navigation/StartButton.js';
-import Navigation from '../navigation/Navigation.js';
+import ResponsiveNavigation from '../navigation/ResponsiveNavigation.js';
 
 const CitiesService = ({ map, user }) => {
   const { location } = useGeoLocation();
@@ -86,7 +86,7 @@ const CitiesService = ({ map, user }) => {
           <StartButton onClick={hideComponentsAndStartNavigation}/>
         </>
         ) : (
-          <Navigation map={map} user={user}/>
+          <ResponsiveNavigation map={map} user={user}/>
         )}
     </>
   );

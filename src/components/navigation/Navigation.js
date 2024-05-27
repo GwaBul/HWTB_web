@@ -115,13 +115,7 @@ const NavigationComponent = ({ map, user }) => {
         return () => clearInterval(interval);
     }, [currentIndex, user]);
 
-    return (
-        <>
-            <SelectButton/>
-            <InfoComponent />
-            <StartButton />
-        </>
-    );
+    return null;
 };
 
 export default NavigationComponent;

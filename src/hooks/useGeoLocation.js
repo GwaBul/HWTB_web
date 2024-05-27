@@ -13,7 +13,7 @@ export const useGeoLocation = (options) => {
 
     const watcher = geolocation.watchPosition(handleSuccess, handleError, {
       enableHighAccuracy: true,
-      timeout: 1000 * 10,
+      timeout: 1000 * 10, // 10초마다 GPS좌표 요청
       maximumAge: 1000 * 3600 * 24,
       ...options,
     });

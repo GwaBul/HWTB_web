@@ -2,7 +2,7 @@ import { Button, Card } from '@mui/material';
 import React from 'react';
 import './css/StartButton.css';
 
-const StartButton = ({onClick}) => {
+const StartButton = ({onClick, setShow}) => {
     return (
         <div className="start-btn">
             <Card sx={{ backgroundColor:'rgb(0, 124, 255)', width: 130, borderRadius: 5, textAlign:'center'}}>

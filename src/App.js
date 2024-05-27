@@ -160,7 +160,7 @@ const App = () => {
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
       {/*showNavigation && <NavigationComponent map={map} user={userMarker}/>*/}
-      <CitiesService map={map}/>
+      <CitiesService map={map} user={userMarker}/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

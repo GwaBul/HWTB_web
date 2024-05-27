@@ -70,7 +70,7 @@ const requestPermission = () => {
 // }
 
 const App = () => {
-  const { location } = useGeoLocation();          
+  const { location } = useGeoLocation();          // 사용자 좌표 조회
   const latitude = location ? location.latitude : null;
   const longitude = location ? location.longitude : null;
   const [map, setMap] = useState(null);           // 지도 객체 
@@ -160,7 +160,7 @@ const App = () => {
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
       {/*showNavigation && <NavigationComponent map={map} user={userMarker}/>*/}
-      <CitiesService/>
+      <CitiesService map={map}/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

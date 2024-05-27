@@ -1,37 +1,76 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios'; 
+import { CitiesContext } from '../../CitiesContext';
+import { useGeoLocation } from '../../hooks/useGeoLocation.js';
+import { apikey } from '../../config.js'; 
 
 const CitiesService = () => {
-  const [cities, setCities] = useState([]);
+  const { location } = useGeoLocation();
+  const latitude = location ? location.latitude : null;
+  const longitude = location ? location.longitude : null;  
+  const { cities } = useContext(CitiesContext);
+  const [address, setAddress] = useState('');
 
   useEffect(() => {
-    // Service Worker 지원 여부 확인
-    if ('serviceWorker' in navigator) {
-      console.log('serviceWorker 수신', navigator.serviceWorker);
-      navigator.serviceWorker.getRegistration().then((registration) => {
-        if (registration && registration.active) {
-          // 활성화된 Service Worker에 대한 메시지 리스너 추가
-          registration.active.addEventListener('message', (event) => {
-            console.log('메인 스크립트로부터 메시지 수신:', event.data);
-            if (event.data.type === 'CITIES_UPDATE') {
-              setCities(event.data.data);
+    console.log(cities);
+  }, [cities]);
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      const reverseGeocoding = async () => {
+        console.time('reverseGeocoding');
+
+        try {
+          const response = await axios.get('https://apis.openapi.sk.com/tmap/geo/reversegeocoding', {
+            params: {
+              version: 1,
+              lat: latitude,
+              lon: longitude,
+              coordType: 'WGS84GEO',
+              addressType: 'A10',
+              coordYn: 'Y',
+              keyInfo: 'Y',
+              newAddressExtend: 'Y'
+            },
+            headers: {
+              Accept: 'application/json',
+              appKey: apikey 
             }
           });
-        } else {
-          console.log('활성화된 Service Worker가 없습니다.');
+          setAddress(response.data.addressInfo.fullAddress);
+          console.log('Address:', address);
+        } catch (error) {
+          console.error('reverseGeocoding 요청 실패:', error);
         }
-      }).catch((error) => {
-        console.log('Service Worker 등록 확인 중 오류 발생:', error);
-      });
-    }
-  }, []);
 
-  return (
-    <div>
-      {cities.map((city, index) => (
-        <div key={index}>{city}</div>
-      ))}
-    </div>
-  );
+        console.timeEnd('reverseGeocoding');
+      };
+
+      reverseGeocoding();
+    }
+  }, [latitude, longitude]);
+
+  useEffect(() => {
+    // const sendSignalToServer = async () => {
+
+    // //   try {
+    // //     const response = await axios.post('YOUR_SERVER_ENDPOINT', {
+    // //       message: 'A city in the address was found in the cities list.',
+    // //       address,
+    // //       matchedCity: cities.find(city => address.includes(city)) 
+    // //     });
+    // //     console.log('Signal sent to server:', response.data);
+    // //   } catch (error) {
+    // //     console.error('Sending signal to server failed:', error);
+    // //   }
+    // // };
+    
+    if (cities.some(city => address.includes(city))) {
+      //sendSignalToServer();
+    }
+  }, [cities, address]); 
+
+  return null;
 };
 
 export default CitiesService;

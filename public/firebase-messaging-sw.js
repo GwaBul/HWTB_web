@@ -12,30 +12,26 @@ firebase.initializeApp({
   measurementId: "G-C3HX8EKJ95"
 });
 
-
 const messaging = firebase.messaging();
 
-self.addEventListener('install', (event) => {
-  console.log('Service Worker 설치 완료');
-});
+messaging.onBackgroundMessage((payload) => {
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload
+  );
+  const data = payload.data;
+  const jsonString = data.cities;
+  const parsedList = JSON.parse(jsonString);
+  console.log(parsedList);
 
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker 활성화 완료');
-});
+  // // Customize notification here
+  // const notificationTitle = '백그라운드 메시지입니다';
+  // const notificationOptions = {
+  //   body: '노티피케이션 변경 완료',
+  //   icon: '/firebase-logo.png'
+  // };
 
-self.addEventListener('message', (event) => {
-  console.log('Service Worker에서 메시지 수신:', event.data);
-  if (event.data && event.data.type === 'GET_CITIES') {
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({
-          type: 'CITIES_UPDATE',
-          data: ['Seoul', 'New York', 'Tokyo']
-        });
-      });
-    });
-  }
-});
+  // self.registration.showNotification(notificationTitle, notificationOptions);
 
   // 메인 스크립트로 메시지 보내기
   // notificationclick 이벤트 리스너 추가
@@ -54,7 +50,7 @@ self.addEventListener('message', (event) => {
         let matchingClient = null;
 
         for (let i = 0; i < windowClients.length; i++) {
-          const windowClient = windowClients[i];
+          var windowClient = windowClients[i];
           if (windowClient.url === urlToOpen) {
             matchingClient = windowClient;
             break;
@@ -72,7 +68,7 @@ self.addEventListener('message', (event) => {
         if (windowClient) {
           windowClient.postMessage({
             type: 'CITIES_UPDATE',
-            data: ['대구', '부산']
+            data: parsedList
           });
         }
       });
@@ -82,25 +78,6 @@ self.addEventListener('message', (event) => {
     // 알림 닫기
     event.notification.close();
   });
-
-messaging.onBackgroundMessage((payload) => {
-  console.log(
-    '[firebase-messaging-sw.js] Received background message ',
-    payload
-  );
-  // const data = payload.data;
-  // const jsonString = data.cities;
-  // const parsedList = JSON.parse(jsonString);
-  // console.log(parsedList);
-
-  // Customize notification here
-  const notificationTitle = '백그라운드 메시지입니다';
-  const notificationOptions = {
-    body: '노티피케이션 변경 완료',
-    icon: '/firebase-logo.png'
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
 
   // fetch('YOUR_SERVER_ENDPOINT', {
   //   method: 'GET',
@@ -117,6 +94,8 @@ messaging.onBackgroundMessage((payload) => {
   //   });
 
 });
+
+
 
 self.addEventListener("install", function (e) {
   self.skipWaiting();

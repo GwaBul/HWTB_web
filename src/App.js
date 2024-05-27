@@ -31,14 +31,6 @@ onMessage(messaging, (payload) => {
   // sendUserLocation(coordinate);
 });
 
-// 사용자 GPS 좌표 보내는 함수
-const sendUserLocation = (coordinate) => {
-  axios.post('http://localhost:8080/gps', coordinate)
-    .then((response) => {
-      console.log(response);
-    })
-}
-
 // PWA 알림 권한 요청 및 FCM 사용 디바이스 토큰 발급 함수 
 const requestPermission = () => {
   console.log('알림 권한 요청중...');
@@ -49,7 +41,6 @@ const requestPermission = () => {
         .then((currentToken) => {
           if (currentToken) {
             console.log('토큰 ID: ' + currentToken);
-            //document.getElementById('abc').innerHTML = `디바이스 토큰 : ${currentToken}`;
             //sendToken(currentToken);
           } else {
             console.log('토큰을 찾을 수 없습니다.');
@@ -79,7 +70,7 @@ const requestPermission = () => {
 // }
 
 const App = () => {
-  const { location } = useGeoLocation();          // 사용자 좌표 조회
+  const { location } = useGeoLocation();          
   const latitude = location ? location.latitude : null;
   const longitude = location ? location.longitude : null;
   const [map, setMap] = useState(null);           // 지도 객체 
@@ -87,8 +78,39 @@ const App = () => {
   const [userMarker, setuserMarker] = useState(null);     // 지도 마커
   const [showNavigation, setShowNavigation] = useState(false);
 
+  navigator.serviceWorker.addEventListener("messaage", function (event) {
+    console.log(event.data);
+  });
+
   useEffect(() => {
     requestPermission();
+    const handleMessage = (event) => {
+      console.log('메인 스크립트로부터 메시지 수신:', event.data);
+      if (event.data.type === 'CITIES_UPDATE') {
+        console.log(event.data.data);
+      }
+    };
+
+    // Service Worker 지원 여부 확인 및 메시지 리스너 등록
+    if ('serviceWorker' in navigator) {
+      console.log('ServiceWorker 수신', navigator.serviceWorker);
+      navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration && registration.active) {
+          registration.active.addEventListener('message', handleMessage);
+        } else {
+          console.log('활성화된 Service Worker가 없습니다.');
+        }
+      }).catch((error) => {
+        console.log('Service Worker 등록 확인 중 오류 발생:', error);
+      });
+    }
+
+    // 컴포넌트 언마운트 시 메시지 리스너 제거
+    return () => {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.removeEventListener('message', handleMessage);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -137,7 +159,7 @@ const App = () => {
     <>
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
-      {showNavigation && <NavigationComponent map={map} user={userMarker}/>}
+      {/*showNavigation && <NavigationComponent map={map} user={userMarker}/>*/}
       <CitiesService/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />

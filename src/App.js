@@ -116,7 +116,7 @@ const App = () => {
   useEffect(() => {
     if (!initMap && location) {
       //const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
-      const center = new Tmapv3.LatLng(36.124802, 128.333607);
+      const center = new Tmapv3.LatLng(36.1457981,128.3925537);
       const newMap = new Tmapv3.Map("map", {
         center: center,
         width: "100%",
@@ -130,7 +130,7 @@ const App = () => {
       var tmapSize = new Tmapv3.Size(40, 40);
 
       const userMarker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(36.124802, 128.333607),
+        position: new Tmapv3.LatLng(36.1457981,128.3925537),
         icon: `${user}`,
         iconSize: tmapSize,
         map: newMap

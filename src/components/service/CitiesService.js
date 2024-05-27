@@ -14,6 +14,7 @@ const CitiesService = ({ map }) => {
   const { cities } = useContext(CitiesContext);
   const [address, setAddress] = useState('');
   const [show, setShow] = useState(false);
+  const [exitCoord, setExitCoord] = useState([]);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -48,15 +49,15 @@ const CitiesService = ({ map }) => {
   useEffect(() => {
     const sendSignalToServer = async (matchedCity) => {
       try {
-        const response = await axios.post('YOUR_SERVER_ENDPOINT', {
-          message: 'A city in the address was found in the cities list.',
-          address,
-          matchedCity
-        });
+        const response = await axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/gps', {
+          isInCity : true,
+          city: matchedCity,
+          x: 128.392842,
+          y: 36.145910,        
+          });
         setShow(true);
         console.log('Signal sent to server:', response.data);
-        // 받은 데이터는 0, 1, 2의 인덱스 별로 탈출구 좌표가 최단거리 그거에 따라 찍으면 됨
-        // 탈출구 리스트의 원소 갯수만큼 컴포넌트 할당(경로가 2개만 제공되는 것도 있다고함 만약, 2개 제공 시 경로 1, 경로 2 만 활성화되게)
+        setExitCoord(response.data.exits);
       } catch (error) {
         console.error('Sending signal to server failed:', error);
       }
@@ -72,7 +73,7 @@ const CitiesService = ({ map }) => {
     <>
       {show &&
         <>
-          <SelectButton map={map} />
+          <SelectButton map={map} exitCoord={exitCoord}/>
           <InfoComponent />
           <StartButton setShow={setShow} />
         </>

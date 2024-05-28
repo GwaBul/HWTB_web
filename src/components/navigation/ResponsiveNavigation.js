@@ -39,7 +39,7 @@ const dummyUserMovement = [
 ]
 
 // GPS 이용 코드
-// const NavigationComponent = ({ map }) => {
+// const ResponsiveNavigation = ({ map }) => {
 //     const { location, error } = useGeoLocation();
 //     const [requestData, setRequestData] = useState(null);
 //     const [currentIndex, setCurrentIndex] = useState(0);
@@ -75,10 +75,11 @@ const dummyUserMovement = [
 //     );
 //   };
 
-const NavigationComponent = ({ map, user }) => {
+const ResponsiveNavigation = ({ map, user }) => {
     const [requestData, setRequestData] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [shouldNavigate, setShouldNavigate] = useState(false);
+    
     useNavigateToUserLocation(map, requestData, shouldNavigate);
 
     // 사용자 위치 설정과 요청 데이터 업데이트를 동시에 처리하는 함수
@@ -100,22 +101,22 @@ const NavigationComponent = ({ map, user }) => {
     };
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (currentIndex < dummyUserMovement.length) {
+        if (currentIndex < dummyUserMovement.length) {
+            const interval = setInterval(() => {
                 const currentMovement = dummyUserMovement[currentIndex];
                 updateNavigation(currentMovement); // 위치 설정과 요청 데이터 업데이트
                 setShouldNavigate(true);
                 setCurrentIndex((prevIndex) => prevIndex + 1);
-            } else {
-                clearInterval(interval);
-                setShouldNavigate(false); // 모든 이동이 완료되면 경로 그리기 중지
-            }
-        }, 1000);
+            }, 1000);
 
-        return () => clearInterval(interval);
+            return () => clearInterval(interval);
+        } else {
+            setShouldNavigate(false); // 모든 이동이 완료되면 경로 그리기 중지
+        }
     }, [currentIndex, user]);
 
     return null;
 };
 
-export default NavigationComponent;
+
+export default ResponsiveNavigation;

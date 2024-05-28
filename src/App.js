@@ -9,7 +9,6 @@ import Header from './components/HeaderComponent';
 import LocationButton from './components/LocationButtonComponent';
 import user from './assets/user.png'
 import useNavigateToUserLocation from './hooks/useNavigaterToUserLocation';
-import NavigationComponent from './components/navigation/Navigation';
 import TestButton from './components/TestButton';
 import CitiesService from './components/service/CitiesService';
 
@@ -159,8 +158,8 @@ const App = () => {
     <>
       <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
-      {/*showNavigation && <NavigationComponent map={map} user={userMarker}/>*/}
-      <CitiesService map={map}/>
+      {/*showNavigation && <ResponsiveNavigation map={map} user={userMarker}/>*/}
+      <CitiesService map={map} user={userMarker}/>
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

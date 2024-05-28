@@ -27,7 +27,6 @@ const SelectButton = ({ map, exitCoord }) => {
     useEffect(() => {
         if (exitCoord && exitCoord.length > 0 && selectedButton !== null) {
             const selectedCoord = exitCoord[selectedButton];
-            console.log(exitCoord);
             setRequestData(prevState => ({
                 ...prevState,
                 endX: selectedCoord.x.toString(),

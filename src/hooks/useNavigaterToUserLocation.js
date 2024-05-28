@@ -27,6 +27,19 @@ const { Tmapv3 } = window;
 const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
   const [polyline, setPolyline] = useState(null);
 
+  useEffect(()=> {
+    console.log('지도 변하는중');
+  },[map])
+
+  useEffect(()=> {
+    console.log('요청 데이터 변하는중');
+  },[requestData])
+
+  useEffect(()=> {
+    console.log('슈드네비게이트 변하는중');
+  },[shouldNavigate])
+
+
   useEffect(() => {
     if (!map || !requestData || !shouldNavigate) return;
     const navigateToUserLocation = async () => {

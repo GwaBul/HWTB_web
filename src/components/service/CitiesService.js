@@ -6,8 +6,9 @@ import { apikey } from '../../config.js';
 import SelectButton from '../navigation/SelectButton.js';
 import InfoComponent from '../InfoComponent.js';
 import StartButton from '../navigation/StartButton.js';
+import ResponsiveNavigation from '../navigation/ResponsiveNavigation.js';
 
-const CitiesService = ({ map }) => {
+const CitiesService = ({ map, user }) => {
   const { location } = useGeoLocation();
   const latitude = location?.latitude;
   const longitude = location?.longitude;
@@ -15,6 +16,11 @@ const CitiesService = ({ map }) => {
   const [address, setAddress] = useState('');
   const [show, setShow] = useState(false);
   const [exitCoord, setExitCoord] = useState([]);
+
+
+  const hideComponentsAndStartNavigation = () => {
+    setShow(false);
+  };
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -55,8 +61,6 @@ const CitiesService = ({ map }) => {
           x: 128.392842,
           y: 36.145910,        
           });
-        setShow(true);
-        console.log('Signal sent to server:', response.data);
         setExitCoord(response.data.exits);
       } catch (error) {
         console.error('Sending signal to server failed:', error);
@@ -69,15 +73,21 @@ const CitiesService = ({ map }) => {
     }
   }, [address, cities]);
 
+  useEffect(()=>{
+    console.log(exitCoord);
+  },[exitCoord])
+
   return (
     <>
-      {show &&
+      {show ? (
         <>
           <SelectButton map={map} exitCoord={exitCoord}/>
           <InfoComponent />
-          <StartButton setShow={setShow} />
+          <StartButton onClick={hideComponentsAndStartNavigation}/>
         </>
-      }
+        ) : (
+          <ResponsiveNavigation map={map} user={user}/>
+        )}
     </>
   );
 };

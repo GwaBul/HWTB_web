@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios"
 import './App.css';
 import { initializeApp } from "firebase/app";
@@ -8,9 +8,8 @@ import { useGeoLocation } from './hooks/useGeoLocation';
 import Header from './components/HeaderComponent';
 import LocationButton from './components/LocationButtonComponent';
 import user from './assets/user.png'
-import useNavigateToUserLocation from './hooks/useNavigaterToUserLocation';
-import TestButton from './components/TestButton';
 import CitiesService from './components/service/CitiesService';
+import { CitiesContext } from './CitiesContext';
 
 const { Tmapv3 } = window;
 const app = initializeApp(firebaseConfig);
@@ -32,7 +31,6 @@ onMessage(messaging, (payload) => {
 
 // PWA 알림 권한 요청 및 FCM 사용 디바이스 토큰 발급 함수 
 const requestPermission = () => {
-  console.log('알림 권한 요청중...');
   Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
       console.log('알림 권한 승인 완료');
@@ -40,7 +38,7 @@ const requestPermission = () => {
         .then((currentToken) => {
           if (currentToken) {
             console.log('토큰 ID: ' + currentToken);
-            //sendToken(currentToken);
+            sendToken(currentToken);
           } else {
             console.log('토큰을 찾을 수 없습니다.');
           }
@@ -53,20 +51,19 @@ const requestPermission = () => {
 }
 
 // 사용자 디바이스 토큰 서버에 전송하는 함수
-// const sendToken = (token) => {
-//   axios.post('http://localhost:8080/fcm/devices', {
-//     name: token
-//   })
-//     .then(function (response) {
-//       console.log("200", response);
-//       if (response.status === 200) {
-//         console.log("토큰 발사 성공");
-//       }
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-// }
+const sendToken = (token) => {
+  axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/tokens', {
+    token: token
+  })
+    .then(function (response) {
+      if (response.status === 200) {
+        console.log("토큰 발사 성공");
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 
 const App = () => {
   const { location } = useGeoLocation();          // 사용자 좌표 조회
@@ -76,10 +73,8 @@ const App = () => {
   const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
   const [userMarker, setuserMarker] = useState(null);     // 지도 마커
   const [showNavigation, setShowNavigation] = useState(false);
-
-  navigator.serviceWorker.addEventListener("messaage", function (event) {
-    console.log(event.data);
-  });
+  const { cities } = useContext(CitiesContext);
+  const [showCities, setShowCities] = useState(false);
 
   useEffect(() => {
     requestPermission();
@@ -112,6 +107,10 @@ const App = () => {
     }
   }, []);
 
+  useEffect(()=> {
+    setShowCities(cities.length > 0);
+  },[cities])
+
   useEffect(() => {
     if (!initMap && location) {
       //const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
@@ -120,7 +119,7 @@ const App = () => {
         center: center,
         width: "100%",
         height: "100%",
-        zoom: 18,
+        zoom: 15,
         // maxZoom: 20,
         // minZoom: 15,
         pitch: "60",
@@ -135,7 +134,7 @@ const App = () => {
         map: newMap
       });
 
-      var exitMarker = new Tmapv3.Marker({
+      const exitMarker = new Tmapv3.Marker({
         position: new Tmapv3.LatLng(36.124957, 128.334231),
         map: newMap
       });
@@ -147,19 +146,25 @@ const App = () => {
     }
   }, [location, initMap, userMarker, latitude, longitude]);
 
+  useEffect(() => {
+    if (map && location && userMarker) {
+      const newPosition = new Tmapv3.LatLng(36.1457981,128.3925537);
+      userMarker.setPosition(newPosition);
+    }
+  }, [location, map, userMarker, latitude, longitude]);
+  
   const moveToUserLocation = (e) => {
     if (map && location) {
-      const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
+      const center = new Tmapv3.LatLng(36.1457981,128.3925537);
       map.setCenter(center);
     }
   };
 
   return (
     <>
-      <Header />
       <LocationButton moveToUserLocation={moveToUserLocation} />
       {/*showNavigation && <ResponsiveNavigation map={map} user={userMarker}/>*/}
-      <CitiesService map={map} user={userMarker}/>
+      {showCities && <CitiesService map={map} user={userMarker}/>}
       <div id="map_wrap" className="map_wrap">
         <div id="map" />
       </div>

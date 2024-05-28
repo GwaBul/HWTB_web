@@ -37,7 +37,6 @@ const SelectButton = ({ map, exitCoord }) => {
 
     const handleButtonClick = (index) => {
         setSelectedButton(index);
-        
     }
 
     const buttons = exitCoord.map((coord, index) => (

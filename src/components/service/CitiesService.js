@@ -14,9 +14,8 @@ const CitiesService = ({ map, user }) => {
   const longitude = location?.longitude;
   const { cities } = useContext(CitiesContext);
   const [address, setAddress] = useState('');
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [exitCoord, setExitCoord] = useState([]);
-
 
   const hideComponentsAndStartNavigation = () => {
     setShow(false);
@@ -42,7 +41,13 @@ const CitiesService = ({ map, user }) => {
               appKey: apikey
             }
           });
-          setAddress(response.data.addressInfo.fullAddress);
+          const fullAddress = response.data.addressInfo.fullAddress;
+          setAddress(fullAddress);
+
+          const matchedCity = cities.find(city => fullAddress.includes(city));
+          if (matchedCity) {
+            await sendSignalToServer(matchedCity);
+          }
         } catch (error) {
           console.error('reverseGeocoding 요청 실패:', error);
         }
@@ -50,44 +55,37 @@ const CitiesService = ({ map, user }) => {
     };
 
     fetchAddress();
-  }, [cities]);
+  }, [cities, latitude, longitude]);
+
+  const sendSignalToServer = async (matchedCity) => {
+    try {
+      const response = await axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/gps', {
+        isInCity: true,
+        city: matchedCity,
+        x: 128.392842,
+        y: 36.145910,
+      });
+      setExitCoord(response.data.exits);
+    } catch (error) {
+      console.error('Sending signal to server failed:', error);
+    }
+  };
 
   useEffect(() => {
-    const sendSignalToServer = async (matchedCity) => {
-      try {
-        const response = await axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/gps', {
-          isInCity : true,
-          city: matchedCity,
-          x: 128.392842,
-          y: 36.145910,        
-          });
-        setExitCoord(response.data.exits);
-      } catch (error) {
-        console.error('Sending signal to server failed:', error);
-      }
-    };
-
-    const matchedCity = cities.find(city => address.includes(city));
-    if (matchedCity) {
-      sendSignalToServer(matchedCity);
-    }
-  }, [address, cities]);
-
-  useEffect(()=>{
     console.log(exitCoord);
-  },[exitCoord])
+  }, [exitCoord]);
 
   return (
     <>
       {show ? (
         <>
-          <SelectButton map={map} exitCoord={exitCoord}/>
+          {exitCoord.length > 0 && <SelectButton map={map} exitCoord={exitCoord} />}
           <InfoComponent />
-          <StartButton onClick={hideComponentsAndStartNavigation}/>
+          <StartButton onClick={hideComponentsAndStartNavigation} />
         </>
-        ) : (
-          <ResponsiveNavigation map={map} user={user}/>
-        )}
+      ) : (
+        <ResponsiveNavigation map={map} user={user} />
+      )}
     </>
   );
 };

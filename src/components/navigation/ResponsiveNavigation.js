@@ -143,6 +143,9 @@ const ResponsiveNavigation = ({ map, user }) => {
     const updateNavigation = (currentMovement) => {
         const lonlat = new Tmapv3.LatLng(currentMovement.startY, currentMovement.startX);
         user.setPosition(lonlat); // 사용자 위치 설정
+        const center = new Tmapv3.LatLng(parseFloat(currentMovement.startY), parseFloat(currentMovement.startX));
+        map.setCenter(center);
+        map.setZoom(19);
 
         setRequestData({
             startX: currentMovement.startX,

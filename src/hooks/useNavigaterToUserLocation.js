@@ -45,7 +45,7 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
     const navigateToUserLocation = async () => {
       try {
         if(requestData === null) return;
-        console.log(requestData);
+        console.log('요청데이터 : ', requestData);
         const response = await axios.post(
           'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&callback=function',
           requestData,
@@ -55,7 +55,7 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
             }
           }
         );
-        console.log(response.data)
+        console.log('길찾기 API 응답 데이터 : ', response.data)
         const resultData = response.data.features;
         const drawInfoArr = [];
 
@@ -80,7 +80,7 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
           path: drawInfoArr,
           strokeColor: "#4B87FF",
           strokeWeight: 6,
-          // direction : true, //방향선 표시여부
+          direction : true, //방향선 표시여부
           map: map
         });
         setPolyline(NewPolyLine);

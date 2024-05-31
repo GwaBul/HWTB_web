@@ -72,7 +72,6 @@ const App = () => {
   const [map, setMap] = useState(null);           // 지도 객체 
   const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
   const [userMarker, setuserMarker] = useState(null);     // 지도 마커
-  const [showNavigation, setShowNavigation] = useState(false);
   const { cities } = useContext(CitiesContext);
   const [showCities, setShowCities] = useState(false);
 
@@ -113,8 +112,8 @@ const App = () => {
 
   useEffect(() => {
     if (!initMap && location) {
-      //const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
-      const center = new Tmapv3.LatLng(36.1457981,128.3925537);
+      const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
+      //const center = new Tmapv3.LatLng(36.1457981,128.3925537);
       const newMap = new Tmapv3.Map("map", {
         center: center,
         width: "100%",
@@ -128,7 +127,7 @@ const App = () => {
       var tmapSize = new Tmapv3.Size(40, 40);
 
       const userMarker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(36.1457981,128.3925537),
+        position: new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude)),
         icon: `${user}`,
         iconSize: tmapSize,
         map: newMap
@@ -142,20 +141,32 @@ const App = () => {
       setMap(newMap);
       setInitMap(true);
       setuserMarker(userMarker);
-      setShowNavigation(true);
     }
   }, [location, initMap, userMarker, latitude, longitude]);
-
-  useEffect(() => {
-    if (map && location && userMarker) {
-      const newPosition = new Tmapv3.LatLng(36.1457981,128.3925537);
-      userMarker.setPosition(newPosition);
-    }
-  }, [location, map, userMarker, latitude, longitude]);
   
+  useEffect(() => {
+    if (map && location) {
+      const center = new Tmapv3.LatLng(parseFloat(location.latitude), parseFloat(location.longitude));
+      map.setCenter(center);
+  
+      if (userMarker) {
+        userMarker.setMap(null);
+      }
+  
+      const newUserMarker = new Tmapv3.Marker({
+        position: center,
+        icon: `${user}`,
+        iconSize: new Tmapv3.Size(40, 40),
+        map: map
+      });
+  
+      setuserMarker(newUserMarker);
+    }
+  }, [location, map]);
+
   const moveToUserLocation = (e) => {
     if (map && location) {
-      const center = new Tmapv3.LatLng(36.1457981,128.3925537);
+      const center = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
       map.setCenter(center);
     }
   };
@@ -163,7 +174,6 @@ const App = () => {
   return (
     <>
       <LocationButton moveToUserLocation={moveToUserLocation} />
-      {/*showNavigation && <ResponsiveNavigation map={map} user={userMarker}/>*/}
       {showCities && <CitiesService map={map} user={userMarker}/>}
       <div id="map_wrap" className="map_wrap">
         <div id="map" />

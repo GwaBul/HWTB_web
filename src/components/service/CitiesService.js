@@ -71,6 +71,11 @@ const CitiesService = ({ map, user }) => {
     }
   };
 
+  const handleSelectExitCoord = (selectedCoord, selectedIndex) => {
+    // 선택된 exitCoord의 좌표나 인덱스를 처리
+    console.log(selectedCoord, selectedIndex);
+  };
+
   useEffect(() => {
     console.log(exitCoord);
   }, [exitCoord]);
@@ -79,12 +84,12 @@ const CitiesService = ({ map, user }) => {
     <>
       {show ? (
         <>
-          {exitCoord.length > 0 && <SelectButton map={map} exitCoord={exitCoord} />}
+          {exitCoord.length > 0 && <SelectButton map={map} exitCoord={exitCoord} onSelectExitCoord={handleSelectExitCoord}/>}
           <InfoComponent />
           <StartButton onClick={hideComponentsAndStartNavigation} />
         </>
       ) : (
-        <ResponsiveNavigation map={map} user={user} />
+        <ResponsiveNavigation map={map} user={user} exitCoord={exitCoord}/>
       )}
     </>
   );

@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import './css/SelectButton.css';
 import useNavigateToUserLocation from '../../hooks/useNavigaterToUserLocation';
 
-const SelectButton = ({ map, exitCoord }) => {
+const SelectButton = ({ map, exitCoord, onSelectExitCoord }) => {
     const [selectedButton, setSelectedButton] = useState(0);
     const [requestData, setRequestData] = useState({
         startX: '128.3925537',
@@ -37,6 +37,8 @@ const SelectButton = ({ map, exitCoord }) => {
 
     const handleButtonClick = (index) => {
         setSelectedButton(index);
+        const selectedCoord = exitCoord[index];
+        onSelectExitCoord(selectedCoord, index);
     }
 
     const buttons = exitCoord.map((coord, index) => (

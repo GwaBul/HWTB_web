@@ -79,12 +79,21 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
         const NewPolyLine = new Tmapv3.Polyline({
           path: drawInfoArr,
           strokeColor: "#4B87FF",
-          strokeWeight: 6,
-          direction : true, //방향선 표시여부
+          strokeWeight: 15,
+          direction : false, //방향선 표시여부
           map: map
         });
         setPolyline(NewPolyLine);
         
+        // 지도 방향 설정
+        if (drawInfoArr.length > 1) {
+          const start = drawInfoArr[0];
+          const end = drawInfoArr[1];
+          let angle = Math.atan2(end._lat - start._lat, end._lng - start._lng) * (180 / Math.PI);
+          angle += 90;
+          map.setBearing(angle);
+        }
+
       } catch (error) {
         console.error('Error navigating to user location:', error);
       }

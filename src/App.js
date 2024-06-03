@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios"
 import './App.css';
 import { initializeApp } from "firebase/app";
-import { firebaseConfig, vapidKey, apikey } from './config';
+import { firebaseConfig, vapidKey } from './config';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useGeoLocation } from './hooks/useGeoLocation';
-import Header from './components/HeaderComponent';
 import LocationButton from './components/LocationButtonComponent';
 import user from './assets/user.png'
 import CitiesService from './components/service/CitiesService';
@@ -121,7 +120,8 @@ const App = () => {
         zoom: 15,
         // maxZoom: 20,
         // minZoom: 15,
-        pitch: "60",
+        pitch: 60,
+        naviControl :true
       });
 
       var tmapSize = new Tmapv3.Size(40, 40);
@@ -130,11 +130,6 @@ const App = () => {
         position: new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude)),
         icon: `${user}`,
         iconSize: tmapSize,
-        map: newMap
-      });
-
-      const exitMarker = new Tmapv3.Marker({
-        position: new Tmapv3.LatLng(36.124957, 128.334231),
         map: newMap
       });
 
@@ -147,7 +142,6 @@ const App = () => {
   useEffect(() => {
     if (map && location) {
       const center = new Tmapv3.LatLng(parseFloat(location.latitude), parseFloat(location.longitude));
-      map.setCenter(center);
   
       if (userMarker) {
         userMarker.setMap(null);

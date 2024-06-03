@@ -16,6 +16,7 @@ const CitiesService = ({ map, user }) => {
   const [address, setAddress] = useState('');
   const [show, setShow] = useState(true);
   const [exitCoord, setExitCoord] = useState([]);
+  const [selectedCoord, setSelectedCoord] = useState({});
 
   const hideComponentsAndStartNavigation = () => {
     setShow(false);
@@ -73,7 +74,10 @@ const CitiesService = ({ map, user }) => {
 
   const handleSelectExitCoord = (selectedCoord, selectedIndex) => {
     // 선택된 exitCoord의 좌표나 인덱스를 처리
-    console.log(selectedCoord, selectedIndex);
+    setSelectedCoord({
+      lat: selectedCoord.y, 
+      lng: selectedCoord.x,
+    })
   };
 
   useEffect(() => {

@@ -68,12 +68,13 @@ const App = () => {
   const { location } = useGeoLocation();          // 사용자 좌표 조회
   const latitude = location ? location.latitude : null;
   const longitude = location ? location.longitude : null;
+  const heading = location ? location.heading : null; // 사용자 방향 조회
   const [map, setMap] = useState(null);           // 지도 객체 
   const [initMap, setInitMap] = useState(false);  // 지도 객체 활성화 여부
   const [userMarker, setuserMarker] = useState(null);     // 지도 마커
   const { cities } = useContext(CitiesContext);
   const [showCities, setShowCities] = useState(false);
-
+  
   useEffect(() => {
     requestPermission();
     const handleMessage = (event) => {
@@ -123,7 +124,6 @@ const App = () => {
         pitch: 60,
         naviControl :true
       });
-
       var tmapSize = new Tmapv3.Size(40, 40);
 
       const userMarker = new Tmapv3.Marker({
@@ -136,6 +136,7 @@ const App = () => {
       setMap(newMap);
       setInitMap(true);
       setuserMarker(userMarker);
+      
     }
   }, [location, initMap, userMarker, latitude, longitude]);
   
@@ -155,6 +156,10 @@ const App = () => {
       });
   
       setuserMarker(newUserMarker);
+
+      if (heading !== null) {
+        map.setRotation(heading);
+      }
     }
   }, [location, map]);
 

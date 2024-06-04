@@ -79,12 +79,12 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
         const NewPolyLine = new Tmapv3.Polyline({
           path: drawInfoArr,
           strokeColor: "#4B87FF",
-          strokeWeight: 6,
-          direction : true, //방향선 표시여부
+          strokeWeight: 15,
+          direction : false, //방향선 표시여부
           map: map
         });
         setPolyline(NewPolyLine);
-        
+
       } catch (error) {
         console.error('Error navigating to user location:', error);
       }

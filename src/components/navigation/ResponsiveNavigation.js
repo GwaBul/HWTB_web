@@ -5,6 +5,8 @@ import SelectButton from "./SelectButton";
 import StartButton from "./StartButton";
 import InfoComponent from "../InfoComponent";
 import ArrivalComponent from "../ArrivalComponent";
+import userImage from '../../assets/user.png';
+import { calculateDistance } from "./calculateDistance";
 
 const { Tmapv3 } = window;
 const dummyUserMovement = [
@@ -131,50 +133,66 @@ const dummyUserMovement = [
 //     );
 //   };
 
-const ResponsiveNavigation = ({ map, user }) => {
+const ResponsiveNavigation = ({ map, user, exitCoord }) => {
     const [requestData, setRequestData] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [shouldNavigate, setShouldNavigate] = useState(false);
     const [hasArrived, setHasArrived] = useState(false);
+    const [userMarker, setUserMarker] = useState(null);
 
     useNavigateToUserLocation(map, requestData, shouldNavigate);
 
     // 사용자 위치 설정과 요청 데이터 업데이트를 동시에 처리하는 함수
     const updateNavigation = (currentMovement) => {
         const lonlat = new Tmapv3.LatLng(currentMovement.startY, currentMovement.startX);
-        user.setPosition(lonlat); // 사용자 위치 설정
+        user.setMap(null);
+        if (userMarker) {
+            userMarker.setMap(null);
+        }
+        var tmapSize = new Tmapv3.Size(40, 40);
+
+        const newUserMarker = new Tmapv3.Marker({
+            position: lonlat,
+            icon: `${userImage}`,
+            iconSize: tmapSize,
+            map: map
+        });
+
+        setUserMarker(newUserMarker);
+
         const center = new Tmapv3.LatLng(parseFloat(currentMovement.startY), parseFloat(currentMovement.startX));
         map.setCenter(center);
         map.setZoom(19);
 
-        setRequestData({
-            startX: currentMovement.startX,
-            startY: currentMovement.startY,
-            endX: '128.394656',
-            endY: '36.147367',
-            reqCoordType: 'WGS84GEO',
-            resCoordType: 'EPSG3857',
-            startName: 'User',
-            endName: 'Destination',
-            searchOption: 10
-        });
     };
 
     useEffect(() => {
         if (currentIndex < dummyUserMovement.length) {
             const interval = setInterval(() => {
                 const currentMovement = dummyUserMovement[currentIndex];
-                updateNavigation(currentMovement); // 위치 설정과 요청 데이터 업데이트
+                const currentCoords = { lat: parseFloat(currentMovement.startY), lng: parseFloat(currentMovement.startX) };
+                const distance = calculateDistance(currentCoords, exitCoord); 
+                
+                updateNavigation(currentMovement); 
                 setShouldNavigate(true);
-                setCurrentIndex((prevIndex) => prevIndex + 1);
+    
+                if(distance <= 10) {
+                    setHasArrived(true);
+                    setShouldNavigate(false); 
+                    clearInterval(interval); 
+                } else {
+                    setCurrentIndex((prevIndex) => prevIndex + 1);
+                }
             }, 1000);
-
+    
             return () => clearInterval(interval);
         } else {
-            setShouldNavigate(false); // 모든 이동이 완료되면 경로 그리기 중지
-            setHasArrived(true); // 도착 상태를 true로 설정
+            setShouldNavigate(false); 
+            if (!hasArrived) setHasArrived(true); 
         }
-    }, [currentIndex, user]);
+    }, [currentIndex, user, exitCoord]); 
+    
+    
 
     return (
         <>

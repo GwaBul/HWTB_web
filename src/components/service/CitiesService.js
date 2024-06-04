@@ -16,6 +16,7 @@ const CitiesService = ({ map, user }) => {
   const [address, setAddress] = useState('');
   const [show, setShow] = useState(true);
   const [exitCoord, setExitCoord] = useState([]);
+  const [selectedCoord, setSelectedCoord] = useState({});
 
   const hideComponentsAndStartNavigation = () => {
     setShow(false);
@@ -71,6 +72,14 @@ const CitiesService = ({ map, user }) => {
     }
   };
 
+  const handleSelectExitCoord = (selectedCoord, selectedIndex) => {
+    // 선택된 exitCoord의 좌표나 인덱스를 처리
+    setSelectedCoord({
+      lat: selectedCoord.y, 
+      lng: selectedCoord.x,
+    })
+  };
+
   useEffect(() => {
     console.log(exitCoord);
   }, [exitCoord]);
@@ -79,12 +88,12 @@ const CitiesService = ({ map, user }) => {
     <>
       {show ? (
         <>
-          {exitCoord.length > 0 && <SelectButton map={map} exitCoord={exitCoord} />}
+          {exitCoord.length > 0 && <SelectButton map={map} exitCoord={exitCoord} onSelectExitCoord={handleSelectExitCoord}/>}
           <InfoComponent />
           <StartButton onClick={hideComponentsAndStartNavigation} />
         </>
       ) : (
-        <ResponsiveNavigation map={map} user={user} />
+        <ResponsiveNavigation map={map} user={user} exitCoord={exitCoord}/>
       )}
     </>
   );

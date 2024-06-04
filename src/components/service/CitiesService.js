@@ -13,7 +13,6 @@ const CitiesService = ({ map, user }) => {
   const latitude = location?.latitude;
   const longitude = location?.longitude;
   const { cities } = useContext(CitiesContext);
-  const [address, setAddress] = useState('');
   const [show, setShow] = useState(true);
   const [exitCoord, setExitCoord] = useState([]);
   const [selectedCoord, setSelectedCoord] = useState({});
@@ -43,7 +42,6 @@ const CitiesService = ({ map, user }) => {
             }
           });
           const fullAddress = response.data.addressInfo.fullAddress;
-          setAddress(fullAddress);
 
           const matchedCity = cities.find(city => fullAddress.includes(city));
           if (matchedCity) {
@@ -60,7 +58,7 @@ const CitiesService = ({ map, user }) => {
 
   const sendSignalToServer = async (matchedCity) => {
     try {
-      const response = await axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/gps', {
+      const response = await axios.post('https://kth-app.co.kr/gps', {
         isInCity: true,
         city: matchedCity,
         x: 128.392842,
@@ -93,7 +91,7 @@ const CitiesService = ({ map, user }) => {
           <StartButton onClick={hideComponentsAndStartNavigation} />
         </>
       ) : (
-        <ResponsiveNavigation map={map} user={user} exitCoord={exitCoord}/>
+        <ResponsiveNavigation map={map} user={user} selectedCoord={selectedCoord}/>
       )}
     </>
   );

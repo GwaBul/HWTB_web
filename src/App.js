@@ -51,7 +51,7 @@ const requestPermission = () => {
 
 // 사용자 디바이스 토큰 서버에 전송하는 함수
 const sendToken = (token) => {
-  axios.post('http://ec2-13-209-50-125.ap-northeast-2.compute.amazonaws.com:8080/tokens', {
+  axios.post('https://kth-app.co.kr/tokens', {
     token: token
   })
     .then(function (response) {

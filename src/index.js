@@ -25,7 +25,7 @@ const ServiceWorkerSetup = () => {
         navigator.serviceWorker.addEventListener('message', function (event) {
           console.log('Received message from service worker: ', event.data.data.cities);
           if (event.data) {
-            setCities(event.data.data); 
+            setCities(event.data.data);
           }
         });
       })

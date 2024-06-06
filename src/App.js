@@ -6,7 +6,8 @@ import { firebaseConfig, vapidKey } from './config';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useGeoLocation } from './hooks/useGeoLocation';
 import LocationButton from './components/LocationButtonComponent';
-import user from './assets/user.png'
+import user from './assets/user.png';
+import exit from './assets/exit.png';
 import CitiesService from './components/service/CitiesService';
 import { CitiesContext } from './CitiesContext';
 
@@ -76,6 +77,7 @@ const App = () => {
   const [showCities, setShowCities] = useState(false);
   
   useEffect(() => {
+    console.log('테스트버전 1');
     requestPermission();
     const handleMessage = (event) => {
       console.log('메인 스크립트로부터 메시지 수신:', event.data);
@@ -118,7 +120,7 @@ const App = () => {
         center: center,
         width: "100%",
         height: "100%",
-        zoom: 15,
+        zoom: 17,
         // maxZoom: 20,
         // minZoom: 15,
         pitch: 60,
@@ -157,9 +159,9 @@ const App = () => {
   
       setuserMarker(newUserMarker);
 
-      if (heading !== null) {
-        map.setRotation(heading);
-      }
+      // if (heading !== null) {
+      //   map.setRotation(heading);
+      // } 
     }
   }, [location, map]);
 

@@ -16,6 +16,7 @@ const CitiesService = ({ map, user }) => {
   const [show, setShow] = useState(true);
   const [exitCoord, setExitCoord] = useState([]);
   const [selectedCoord, setSelectedCoord] = useState({});
+  const [calledSendSignal, setCalledSendSignal] = useState(false);
 
   const hideComponentsAndStartNavigation = () => {
     setShow(false);
@@ -23,7 +24,7 @@ const CitiesService = ({ map, user }) => {
 
   useEffect(() => {
     const fetchAddress = async () => {
-      if (latitude && longitude) {
+      if (latitude && longitude && !calledSendSignal) {
         try {
           const response = await axios.get('https://apis.openapi.sk.com/tmap/geo/reversegeocoding', {
             params: {
@@ -42,10 +43,11 @@ const CitiesService = ({ map, user }) => {
             }
           });
           const fullAddress = response.data.addressInfo.fullAddress;
-
+          console.log('reverseGeocoding 요청 :', response.data);
           const matchedCity = cities.find(city => fullAddress.includes(city));
           if (matchedCity) {
             await sendSignalToServer(matchedCity);
+            setCalledSendSignal(true);
           }
         } catch (error) {
           console.error('reverseGeocoding 요청 실패:', error);
@@ -64,13 +66,14 @@ const CitiesService = ({ map, user }) => {
         x: 128.392842,
         y: 36.145910,
       });
+      console.log('send signal to server: ',response.data.exits)
       setExitCoord(response.data.exits);
     } catch (error) {
       console.error('Sending signal to server failed:', error);
     }
   };
 
-  const handleSelectExitCoord = (selectedCoord, selectedIndex) => {
+  const handleSelectExitCoord = (selectedCoord) => {
     // 선택된 exitCoord의 좌표나 인덱스를 처리
     setSelectedCoord({
       lat: selectedCoord.y, 

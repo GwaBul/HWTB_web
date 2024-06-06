@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apikey } from '../config.js';
-
+import exitImage from '../assets/exit.png';
+ 
 const { Tmapv3 } = window;
 
 // 좌표 객체(TMap 네비게이션 함수에 넣기 위한 객체)
@@ -26,10 +27,7 @@ const { Tmapv3 } = window;
 // TODO: 길찾기 시작 후 반응형 네비게이션 컴포넌트에서 hook 연결
 const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
   const [polyline, setPolyline] = useState(null);
-
-  useEffect(()=> {
-    console.log('지도 변하는중');
-  },[map])
+  const [exitMarker, setExitMarker] = useState(null);
 
   useEffect(()=> {
     console.log('요청 데이터 변하는중');
@@ -38,7 +36,6 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
   useEffect(()=> {
     console.log('슈드네비게이트 변하는중');
   },[shouldNavigate])
-
 
   useEffect(() => {
     if (!map || !requestData || !shouldNavigate) return;
@@ -84,6 +81,22 @@ const useNavigateToUserLocation = (map, requestData, shouldNavigate) => {
           map: map
         });
         setPolyline(NewPolyLine);
+
+        if (exitMarker) {
+          exitMarker.setMap(null);
+        }
+
+        var tmapSize = new Tmapv3.Size(40, 40);
+
+        const exitLonLat = new Tmapv3.LatLng(parseFloat(requestData.endY), parseFloat(requestData.endX));
+
+        const newExitMarker = new Tmapv3.Marker({
+          position: exitLonLat,
+          icon: `${exitImage}`, 
+          iconSize: tmapSize, 
+          map: map
+      });
+      setExitMarker(newExitMarker);
 
       } catch (error) {
         console.error('Error navigating to user location:', error);

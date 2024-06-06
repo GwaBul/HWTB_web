@@ -3,6 +3,7 @@ import { useGeoLocation } from "../../hooks/useGeoLocation";
 import useNavigateToUserLocation from "../../hooks/useNavigaterToUserLocation";
 import ArrivalComponent from "../ArrivalComponent";
 import userImage from '../../assets/user.png';
+
 import { calculateDistance } from "./calculateDistance";
 
 const { Tmapv3 } = window;
@@ -21,10 +22,12 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
 
     const updateNavigation = () => {
         const lonlat = new Tmapv3.LatLng(parseFloat(latitude), parseFloat(longitude));
+
         user.setMap(null);
         if (userMarker) {
             userMarker.setMap(null);
         }
+
         var tmapSize = new Tmapv3.Size(40, 40);
 
         const newUserMarker = new Tmapv3.Marker({
@@ -33,7 +36,7 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
             iconSize: tmapSize,
             map: map
         });
-
+        
         setUserMarker(newUserMarker);
 
         const center = new Tmapv3.LatLng(parseFloat(latitude),parseFloat(longitude));

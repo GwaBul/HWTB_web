@@ -6,7 +6,8 @@ import { firebaseConfig, vapidKey } from './config';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useGeoLocation } from './hooks/useGeoLocation';
 import LocationButton from './components/LocationButtonComponent';
-import user from './assets/user.png'
+import user from './assets/user.png';
+import exit from './assets/exit.png';
 import CitiesService from './components/service/CitiesService';
 import { CitiesContext } from './CitiesContext';
 

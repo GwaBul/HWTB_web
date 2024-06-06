@@ -1,9 +1,13 @@
 import { Box, Card, Typography } from '@mui/material';
-import WarningIcon from '@mui/icons-material/Warning';
-import React from 'react';
+import React, { useEffect } from 'react';
 import './css/WarningComponent.css';
 
 const ArrivalComponent = () => {
+    useEffect(() => {
+        setTimeout(() => {
+            window.location.reload(); // 페이지를 새로고침합니다.
+        }, 5000); // 5초 후 실행
+    }, []);
     return (
         <div className="warn-modal">
             <Card sx={{ width: 300, borderRadius:5 }}>

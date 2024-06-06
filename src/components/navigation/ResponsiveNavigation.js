@@ -15,7 +15,7 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
     const heading = location ? location.heading : null;
     const [requestData, setRequestData] = useState(null);
     const [shouldNavigate, setShouldNavigate] = useState(false);
-    const [hasArrived, setHasArrived] = useState(true);
+    const [hasArrived, setHasArrived] = useState(false);
     const [userMarker, setUserMarker] = useState(null);
 
     useNavigateToUserLocation(map, requestData, shouldNavigate);

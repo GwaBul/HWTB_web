@@ -42,7 +42,7 @@ const CitiesService = ({ map, user }) => {
             }
           });
           const fullAddress = response.data.addressInfo.fullAddress;
-
+          console.log('reverseGeocoding 요청 :', response.data);
           const matchedCity = cities.find(city => fullAddress.includes(city));
           if (matchedCity) {
             await sendSignalToServer(matchedCity);
@@ -54,7 +54,7 @@ const CitiesService = ({ map, user }) => {
     };
 
     fetchAddress();
-  }, [cities, latitude, longitude]);
+  }, [cities]);
 
   const sendSignalToServer = async (matchedCity) => {
     try {
@@ -64,6 +64,7 @@ const CitiesService = ({ map, user }) => {
         x: 128.392842,
         y: 36.145910,
       });
+      console.log('send signal to server: ',response.data.exits)
       setExitCoord(response.data.exits);
     } catch (error) {
       console.error('Sending signal to server failed:', error);

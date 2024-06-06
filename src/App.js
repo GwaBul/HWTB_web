@@ -157,9 +157,9 @@ const App = () => {
   
       setuserMarker(newUserMarker);
 
-      if (heading !== null) {
-        map.setRotation(heading);
-      }
+      // if (heading !== null) {
+      //   map.setRotation(heading);
+      // } 
     }
   }, [location, map]);
 

@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGeoLocation } from "../../hooks/useGeoLocation";
 import useNavigateToUserLocation from "../../hooks/useNavigaterToUserLocation";
-import SelectButton from "./SelectButton";
-import StartButton from "./StartButton";
-import InfoComponent from "../InfoComponent";
 import ArrivalComponent from "../ArrivalComponent";
 import userImage from '../../assets/user.png';
 import { calculateDistance } from "./calculateDistance";
@@ -14,6 +11,7 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
     const { location, error } = useGeoLocation();
     const latitude = location ? location.latitude : null;
     const longitude = location ? location.longitude : null;
+    const heading = location ? location.heading : null;
     const [requestData, setRequestData] = useState(null);
     const [shouldNavigate, setShouldNavigate] = useState(false);
     const [hasArrived, setHasArrived] = useState(false);
@@ -42,6 +40,9 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
         map.setCenter(center);
         map.setZoom(19);
 
+        if (heading !== null && heading !== undefined) {
+            map.setBearing(heading);
+        }
     };
 
     useEffect(() => {
@@ -70,7 +71,7 @@ const ResponsiveNavigation = ({ map, user, selectedCoord }) => {
                 return;
             }
         }
-    }, [location]);
+    }, [location, latitude, longitude]);
 
     if (error) {
         return <div>{error}</div>;

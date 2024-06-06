@@ -76,6 +76,7 @@ const App = () => {
   const [showCities, setShowCities] = useState(false);
   
   useEffect(() => {
+    console.log('테스트버전 1');
     requestPermission();
     const handleMessage = (event) => {
       console.log('메인 스크립트로부터 메시지 수신:', event.data);
@@ -118,7 +119,7 @@ const App = () => {
         center: center,
         width: "100%",
         height: "100%",
-        zoom: 15,
+        zoom: 17,
         // maxZoom: 20,
         // minZoom: 15,
         pitch: 60,

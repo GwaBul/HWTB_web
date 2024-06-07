@@ -56,7 +56,7 @@ const CitiesService = ({ map, user }) => {
     };
 
     fetchAddress();
-  }, [cities, latitude, longitude]);
+  }, [cities, latitude, longitude, calledSendSignal]);
 
   const sendSignalToServer = async (matchedCity) => {
     try {

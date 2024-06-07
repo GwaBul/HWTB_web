@@ -12,6 +12,52 @@ firebase.initializeApp({
   measurementId: "G-C3HX8EKJ95"
 });
 
+let parsedList = [];
+
+self.addEventListener('notificationclick', function (event) {
+  console.log('[Service Worker] Notification click Received.', event);
+
+  // 알림 클릭 시 실행될 URL 지정
+  var urlToOpen = new URL('/', self.location.origin).href;
+
+  // 클라이언트가 이미 열려있는지 확인 후, 열려있다면 focus, 그렇지 않다면 새 창에서 열기
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  })
+    .then((windowClients) => {
+      let matchingClient = null;
+
+      for (let i = 0; i < windowClients.length; i++) {
+        var windowClient = windowClients[i];
+        if (windowClient.url === urlToOpen) {
+          matchingClient = windowClient;
+          break;
+        }
+      }
+
+      if (matchingClient) {
+        return matchingClient.focus();
+      } else {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+    .then((windowClient) => {
+      // 알림 클릭 후 앱이 열리면 postMessage 실행
+      if (windowClient) {
+        windowClient.postMessage({
+          type: 'CITIES_UPDATE',
+          data: parsedList
+        });
+      }
+    });
+
+  event.waitUntil(promiseChain);
+
+  // 알림 닫기
+  event.notification.close();
+});
+
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
@@ -21,7 +67,7 @@ messaging.onBackgroundMessage((payload) => {
   );
   const data = payload.data;
   const jsonString = data.cities;
-  const parsedList = JSON.parse(jsonString);
+  parsedList = JSON.parse(jsonString);
   console.log(parsedList);
 
   // // Customize notification here
@@ -35,49 +81,7 @@ messaging.onBackgroundMessage((payload) => {
 
   // 메인 스크립트로 메시지 보내기
   // notificationclick 이벤트 리스너 추가
-  self.addEventListener('notificationclick', function (event) {
-    console.log('[Service Worker] Notification click Received.', event);
-
-    // 알림 클릭 시 실행될 URL 지정
-    var urlToOpen = new URL('/', self.location.origin).href;
-
-    // 클라이언트가 이미 열려있는지 확인 후, 열려있다면 focus, 그렇지 않다면 새 창에서 열기
-    const promiseChain = clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    })
-      .then((windowClients) => {
-        let matchingClient = null;
-
-        for (let i = 0; i < windowClients.length; i++) {
-          var windowClient = windowClients[i];
-          if (windowClient.url === urlToOpen) {
-            matchingClient = windowClient;
-            break;
-          }
-        }
-
-        if (matchingClient) {
-          return matchingClient.focus();
-        } else {
-          return clients.openWindow(urlToOpen);
-        }
-      })
-      .then((windowClient) => {
-        // 알림 클릭 후 앱이 열리면 postMessage 실행
-        if (windowClient) {
-          windowClient.postMessage({
-            type: 'CITIES_UPDATE',
-            data: parsedList
-          });
-        }
-      });
-
-    event.waitUntil(promiseChain);
-
-    // 알림 닫기
-    event.notification.close();
-  });
+  
 
   // fetch('YOUR_SERVER_ENDPOINT', {
   //   method: 'GET',

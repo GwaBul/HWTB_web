@@ -77,7 +77,7 @@ const App = () => {
   const [showCities, setShowCities] = useState(false);
   
   useEffect(() => {
-    console.log('테스트버전 1');
+    console.log('테스트버전 3');
     requestPermission();
     const handleMessage = (event) => {
       console.log('메인 스크립트로부터 메시지 수신:', event.data);
@@ -123,7 +123,6 @@ const App = () => {
         zoom: 17,
         // maxZoom: 20,
         // minZoom: 15,
-        pitch: 60,
         naviControl :true
       });
       var tmapSize = new Tmapv3.Size(40, 40);
